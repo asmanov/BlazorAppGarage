@@ -1,0 +1,32 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<PageTitle>Home</PageTitle>
+
+<MudGrid Justify="Justify.SpaceEvenly">
+    @if(_equips == null){
+   
+}
+else{
+    @foreach (var equip in _equips)
+    {
+        <EquipCard equipment="equip"/>
+    }
+}
+</MudGrid>
+
+
+@code{
+    private IEnumerable<Equipment>? _equips;
+
+    protected override async Task OnInitializedAsync(){
+        try
+        {
+            _equips = await Http.GetFromJsonAsync<IEnumerable<Equipment>>("Equipment/equip-data.json");
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"There was a problem Loading equipment data: {ex.Message}");
+        }
+    }
+}
